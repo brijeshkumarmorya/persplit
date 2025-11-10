@@ -40,40 +40,32 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
-// For proxy setups (Vercel, Nginx, etc.)
-app.set("trust proxy", 1);
-
-// ================== Security Middlewares ==================
+// ================== Security ==================
 app.use(
   helmet({
     crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: process.env.NODE_ENV === "production",
+    contentSecurityPolicy: false, // allow socket connections
   })
 );
 
 // Sanitize MongoDB queries
 app.use(mongoSanitizeSafe);
 
-// Rate limiter for APIs
+// Rate limiting (optional)
 app.use("/api", apiLimiter);
 
-// ================== CORS Setup (Flutter-Safe) ==================
+// ✅ Simple CORS setup for mobile apps
+// Flutter apps don’t send browser-origin headers, so wildcard is safe.
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // Allow mobile apps / Postman
-      const allowedOrigins = [config.frontendUrl];
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: false, // Flutter mobile doesn’t use cookies
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   })
 );
 
-// Debugging CORS (can remove later)
+// Optional logging of request origin (for debugging)
 app.use((req, res, next) => {
-  console.log("🌐 Origin:", req.headers.origin);
+  console.log("📱 Request from:", req.headers["user-agent"]);
   next();
 });
 
@@ -83,21 +75,20 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(sanitizeXSS);
 
-// ================== Socket.io Setup (Optional for Render) ==================
+// ================== Socket.io Setup ==================
 const io = new Server(server, {
   cors: {
-    origin: [config.frontendUrl],
+    origin: "*",
     methods: ["GET", "POST"],
-    credentials: true,
   },
 });
 
-// Authenticate sockets via JWT (disabled on Vercel)
 io.use((socket, next) => {
   try {
     const token =
       socket.handshake.auth?.token ||
       socket.handshake.headers?.authorization?.split(" ")[1];
+
     if (!token) throw new Error("No token provided");
 
     const decoded = jwt.verify(token, config.jwtSecret);
@@ -105,7 +96,7 @@ io.use((socket, next) => {
     next();
   } catch (err) {
     logger.warn(`Socket auth failed: ${err.message}`);
-    next(new Error("Unauthorized"));
+    next(new Error("Unauthorized: Invalid token"));
   }
 });
 
@@ -119,17 +110,18 @@ io.on("connection", (socket) => {
   });
 });
 
-// ================== Routes ==================
-app.get("/", (req, res) => {
-  res.send("Expense Manager Backend Running ✅");
-});
-
+// ================== Health Check ==================
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "OK",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
   });
+});
+
+// ================== Routes ==================
+app.get("/", (req, res) => {
+  res.send("Expense Manager Backend Running ✅ (Mobile API)");
 });
 
 app.use("/api/auth", authRoutes);
@@ -144,26 +136,24 @@ app.use("/api/notifications", notificationRoutes);
 // ================== Error Handler ==================
 app.use(errorHandler);
 
-// ================== Error & Shutdown Handlers ==================
-process.on("uncaughtException", (err) => {
-  logger.error(`Uncaught Exception: ${err.message}`);
-  process.exit(1);
-});
-
-process.on("unhandledRejection", (err) => {
-  logger.error(`Unhandled Rejection: ${err.message}`);
-  server.close(() => process.exit(1));
-});
-
-// ================== Local Only: Start Server ==================
-if (process.env.NODE_ENV !== "production") {
-  const PORT = config.port || process.env.PORT || 8000;
-  server.listen(PORT, "0.0.0.0", () => {
-    logger.info(`🚀 Server running locally on port ${PORT}`);
-    logger.info(`📱 Frontend URL: ${config.frontendUrl}`);
-    logger.info(`🌍 Environment: ${config.nodeEnv}`);
+// ================== Graceful Shutdown ==================
+const shutdown = async () => {
+  logger.info("Shutting down gracefully...");
+  await import("mongoose").then((m) => m.connection.close(false));
+  server.close(() => {
+    logger.info("Server closed");
+    process.exit(0);
   });
-}
+};
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);
 
-// ================== Export for Vercel ==================
+// ================== Start Server ==================
+const PORT = config.port || process.env.PORT || 8000;
+server.listen(PORT, "0.0.0.0", () => {
+  logger.info(`🚀 Server running on port ${PORT}`);
+  logger.info(`🌍 Environment: ${config.nodeEnv}`);
+});
+
+// Export for testing
 export { io, app, server };
