@@ -81,6 +81,7 @@ const io = new Server(server, {
     origin: "*",
     methods: ["GET", "POST"],
   },
+  transports: ["polling", "websocket"], 
 });
 
 io.use((socket, next) => {
@@ -149,7 +150,7 @@ process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
 // ================== Start Server ==================
-const PORT = config.port || process.env.PORT || 8000;
+const PORT = config.port || process.env.PORT || 8080;
 server.listen(PORT, "0.0.0.0", () => {
   logger.info(`🚀 Server running on port ${PORT}`);
   logger.info(`🌍 Environment: ${config.nodeEnv}`);
