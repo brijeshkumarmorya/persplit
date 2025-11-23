@@ -6,6 +6,7 @@ import {
   getGroupById,
   addMember,
   removeMember,
+  getExpensesByGroupId,
 } from "../controllers/groupController.js";
 import { validateGroupMembers, validateNewMember } from "../middleware/validateFriendship.js";
 import { createGroupValidation, addMemberValidation } from "../validators/groupValidators.js";
@@ -16,6 +17,7 @@ const router = express.Router();
 router.post("/", authMiddleware, createGroupValidation, validate, validateGroupMembers, createGroup);
 router.get("/my", authMiddleware, getMyGroups);
 router.get("/:groupId", authMiddleware, getGroupById);
+router.get("/:groupId/expenses", authMiddleware, getExpensesByGroupId);
 router.patch("/:groupId/add-member", authMiddleware, validateNewMember, addMember);
 router.delete("/:groupId/remove-member", addMemberValidation, validate, authMiddleware, removeMember);
 
