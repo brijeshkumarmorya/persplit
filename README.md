@@ -1,271 +1,279 @@
-# PerSplit 💸
+# PerSplit
 
-### Smart Expense Splitting & Management Application
+**PerSplit** is a full-stack expense splitting and management platform designed to simplify shared financial tracking among friends, roommates, and groups. The system provides accurate expense splitting, real-time updates, and optimized settlements through a modern mobile interface built with Flutter and a scalable backend powered by Node.js, Express, and MongoDB.
 
-PerSplit is a **full-stack expense splitting and management platform** designed to simplify shared expense tracking between friends, roommates, and groups.
-
-It provides **accurate expense splitting, real-time updates, secure payments, and optimized settlements** through a modern mobile interface built with **Flutter** and a scalable backend powered by **Node.js, Express, and MongoDB**.
+The goal of the project is to provide a lightweight yet powerful alternative to traditional expense sharing applications by combining automated calculations, secure authentication, and collaborative real-time updates.
 
 ---
 
-# 📱 App Preview
+# Application Preview
+
+## Home & Expense Dashboard
+
+<p align="center">
+<img src="./persplitApp/flutter_02.png" width="220"/>
+<img src="./persplitApp/flutter_03.png" width="220"/>
+<img src="./persplitApp/flutter_05.png" width="220"/>
+</p>
+
+The dashboard provides an overview of balances, recent transactions, and quick access to core features such as adding expenses and settling payments.
+
+---
+
+## Expense Entry & Split Configuration
 
 <p align="center">
 <img src="./persplitApp/flutter_01.png" width="220"/>
-<img src="./persplitApp/flutter_02.png" width="220"/>
-<img src="./persplitApp/flutter_03.png" width="220"/>
-<img src="./persplitApp/flutter_04.png" width="220"/>
+<img src="./persplitApp/flutter_06.png" width="220"/>
+<img src="./persplitApp/flutter_07.png" width="220"/>
 </p>
 
+Users can record expenses with flexible splitting methods including equal splits, percentage splits, and custom allocations.
+
 ---
 
-# 🚀 Features
+## Authentication & Payment
 
-### 1️⃣ Secure Authentication
+<p align="center">
+<img src="./persplitApp/flutter_12.png" width="220"/>
+<img src="./persplitApp/flutter_14.png" width="220"/>
+<img src="./persplitApp/flutter_09.png" width="220"/>
+</p>
+
+The platform supports secure account creation, authentication, and integrated settlement workflows including QR-based payments.
+
+---
+
+# Problem Statement
+
+Many existing expense sharing platforms suffer from several limitations:
+
+* Complex interfaces that are difficult for casual users
+* Limited integration with regional payment systems
+* Lack of real-time updates between participants
+* Manual or inaccurate split calculations
+* Poor support for group collaboration
+
+PerSplit addresses these challenges by providing a streamlined system with automated calculations, integrated payment workflows, and real-time collaboration.
+
+---
+
+# Key Features
+
+## Secure User Authentication
 
 * JWT based authentication
-* Encrypted passwords using **bcrypt**
-* Secure login & session management
+* Password hashing using bcrypt
+* Secure session handling
 
-### 2️⃣ Friend Management
+## Friend and Group Management
 
-* Send / Accept friend requests
-* Manage trusted contacts
-* Organize shared expenses easily
+* Send and accept friend requests
+* Create and manage groups
+* Add or remove group members
+* Organize expenses within trusted networks
 
-### 3️⃣ Group Expense Splitting
+## Comprehensive Expense Tracking
 
-* Create groups
-* Add/remove members
-* Track group expenses
-* Multiple split options:
+* Personal and group expenses
+* Equal, percentage, and custom splitting
+* Automatic balance updates
 
-  * Equal split
-  * Percentage split
-  * Custom split
+## Payment and Settlement
 
-### 4️⃣ Expense Tracking
+* Integrated payment recording
+* QR based settlement workflow
+* Transaction verification
 
-* Record personal or group expenses
-* Automatic share calculation
-* Accurate **paise-precision settlement**
+## Optimized Net Settlement
 
-### 5️⃣ Payment & Settlement
+The system calculates minimal transactions required to settle all balances across a group, reducing unnecessary transfers.
 
-* UPI based settlement
-* QR code payments
-* Payment verification workflow
+## Real-Time Notifications
 
-### 6️⃣ Optimized Net Settlement
-
-PerSplit calculates **minimum transactions required** to clear debts using optimized settlement algorithms.
-
-### 7️⃣ Real-Time Notifications
-
-* WebSocket based notifications
-* Instant updates for:
-
-  * expenses
-  * settlements
-  * friend requests
-  * payments
+* WebSocket powered updates
+* Instant notifications for expenses, payments, and settlements
 
 ---
 
-# 🧠 Problem Statement
+# System Architecture
 
-Many existing expense apps are:
-
-* Complex to use
-* Lack UPI integration
-* Do not support regional payment systems
-* Require manual calculations
-
-PerSplit solves this by providing **simple UI, automated calculations, and real-time collaboration.**
-
----
-
-# 🏗 System Architecture
+The system follows a modular full-stack architecture separating the client application, API layer, and database.
 
 ```
-Flutter Mobile App
+Flutter Mobile Client
         │
-        │ REST API + WebSocket
+        │ REST API / WebSocket
         ▼
-Node.js + Express Backend
+Node.js + Express Server
         │
         ▼
 MongoDB Database
 ```
 
-Additional components:
+**Additional Components**
 
-* **JWT Authentication**
-* **Socket.IO** for real-time updates
-* **UPI integration for settlements**
+* JWT authentication layer
+* Socket.IO real-time communication
+* RESTful API services
+* Secure middleware validation
 
 ---
 
-# 🧰 Tech Stack
+# Technology Stack
 
-### Frontend
+## Frontend
 
 * Flutter
 * Dart
 
-### Backend
+## Backend
 
 * Node.js
 * Express.js
 
-### Database
+## Database
 
 * MongoDB
 
-### Security
-
-* JWT Authentication
-* bcrypt password hashing
-
-### Real-time
+## Real-time Communication
 
 * Socket.IO
 
-### Version Control
+## Security
+
+* JWT authentication
+* bcrypt password hashing
+
+## Development Tools
 
 * Git
 * GitHub
+* REST APIs
 
 ---
 
-# 📂 Project Structure
+# Project Structure
 
 ```
 persplit
 │
-├── src                 # Node.js backend
+├── src                     # Backend application
 │   ├── controllers
 │   ├── routes
 │   ├── models
 │   ├── middleware
+│   ├── validators
 │   └── utils
 │
-├── persplitApp         # Flutter mobile application
+├── persplitApp             # Flutter mobile application
 │   ├── lib
 │   │   ├── pages
 │   │   ├── services
-│   │   └── routes
+│   │   ├── routes
+│   │   └── utils
+│   │
 │   └── assets
 │
-├── README.md
-└── package.json
+├── package.json
+└── README.md
 ```
 
 ---
 
-# ⚙️ Installation & Setup
+# Installation
 
-## 1️⃣ Clone the repository
+## Clone Repository
 
-```bash
+```
 git clone https://github.com/yourusername/persplit.git
 cd persplit
 ```
 
 ---
 
-## 2️⃣ Backend Setup
+# Backend Setup
 
-```bash
+Install dependencies:
+
+```
 npm install
 ```
 
-Create `.env`
+Create an environment configuration file:
 
 ```
 PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret_key
+MONGO_URI=your_mongodb_connection
+JWT_SECRET=your_jwt_secret
 ```
 
-Run server
+Run the server:
 
-```bash
+```
 npm start
 ```
 
 ---
 
-## 3️⃣ Flutter App Setup
+# Mobile Application Setup
+
+Navigate to the Flutter project:
 
 ```
 cd persplitApp
+```
+
+Install dependencies:
+
+```
 flutter pub get
+```
+
+Run the application:
+
+```
 flutter run
 ```
 
 ---
 
-# 📊 Performance
+# Performance and Testing
 
-* API response time: **120–200 ms**
-* MongoDB query time: **< 50 ms**
-* Real-time notification latency: **< 1 second**
+System testing included validation of all critical workflows:
 
----
+* Authentication and authorization
+* Expense creation and splitting
+* Payment verification
+* Group management
+* Notification delivery
 
-# 🧪 Testing
+Observed performance metrics:
 
-The system includes:
-
-* Input validation
-* Rate limiting
-* JWT security tests
-* End-to-end workflow testing
-
-User flows tested:
-
-* Login
-* Add expense
-* Split expenses
-* Payment settlement
-* Notification system
+* API response time: 120–200 ms
+* MongoDB query latency: under 50 ms
+* Real-time notification latency: under 1 second
 
 ---
 
-# 🔮 Future Improvements
+# Future Enhancements
 
-* Recurring expenses
-* Offline mode
-* Analytics dashboard
+Planned improvements include:
+
+* Recurring expense automation
+* Offline expense tracking
+* Financial analytics and visual reports
 * Multi-currency support
-* CSV / Excel export
-* Enhanced social features
+* Export functionality for reporting
+* Enhanced collaboration features
 * Accessibility improvements
 
 ---
 
-# 👨‍💻 Author
+# Author
 
-**Brijesh Kumar**
-
-B.Tech – Faculty of Technology
-University of Delhi
-
-GitHub: https://github.com/yourusername
+Brijesh Kumar
+Bachelor of Technology
+Faculty of Technology, University of Delhi
 
 ---
-
-# ⭐ Support
-
-If you like this project:
-
-⭐ Star the repository
-🍴 Fork the project
-🐛 Report issues
-
----
-
-# 📜 License
-
-This project is licensed under the **MIT License**.
