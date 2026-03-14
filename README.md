@@ -272,8 +272,8 @@ Planned improvements include:
 
 # Author
 
-Brijesh Kumar
-Bachelor of Technology
+Brijesh Kumar Morya\
+Bachelor of Technology\
 Faculty of Technology, University of Delhi
 
 ---
