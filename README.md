@@ -186,7 +186,7 @@ persplit
 ## Clone Repository
 
 ```
-git clone https://github.com/yourusername/persplit.git
+git clone https://github.com/brijeshkumarmorya/persplit.git
 cd persplit
 ```
 
